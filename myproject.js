@@ -1,5 +1,5 @@
 
-document.body.innerHTML = '<style>div{color: grey;text-align:center;position:absolute;margin:auto;top:0;right:0;bottom:0;left:0;width:500px;height:100px;}</style><body><div id="loading"><h1>TEMPLATE</h1><p>This could take a while, please give it at least 5 minutes to render.</p><br><h1 class="spin">⏳</h1><br><h3>Press <strong>?</strong> for shortcut keys</h3><br><p><small>Output contains an embedded blueprint for creating an IRL wall sculpture</small></p></div></body>';
+document.body.innerHTML = '<style>div{color: grey;text-align:center;position:absolute;margin:auto;top:0;right:0;bottom:0;left:0;width:500px;height:100px;}</style><body><div id="loading"><h1>URBAN INCEPTION</h1><p>This could take a while, please give it at least 5 minutes to render.</p><br><h1 class="spin">⏳</h1><br><h3>Press <strong>?</strong> for shortcut keys</h3><br><p><small>Output contains an embedded blueprint for creating an IRL wall sculpture</small></p></div></body>';
 paper.install(window);
 window.onload = function() {
 
@@ -146,6 +146,16 @@ console.log(orientation+': '+~~(wide/100/ratio)+' x '+~~(high/100/ratio))
 
 
 //setup the project variables
+numberofcircles=R.random_int(1,12);
+var cc=[];var cr=[];p=0;
+for (i=0;i<=numberofcircles;i++){
+cc[i]=new Point(~~(noise.get(i*i)*wide),~~(noise.get(i+i)*high));
+cr[i]=~~(wide/8+noise.get(i+50)*(wide/4));
+}
+
+if (noise.get(1567)>.6) {isskewed = "Yes"} else{isskewed = "No"};
+console.log("Skew: "+isskewed);
+console.log("Inceptions: "+numberofcircles);
 
 
 //Pick layer colors from a random pallete based on tint library
@@ -172,10 +182,10 @@ linecolor={"Hex":"#4C4638", "Name":"Mocha"};
 
 
 sheet = []; //This will hold each layer
-var punchX =[];
 
 
-var px=0;var py=0;var pz=0;var prange=.1; 
+
+var px=0;var py=0;var pz=0;var prange=1; pp=0;pr=0;
 
 var center = new Point(wide/2,high/2)
 
@@ -186,12 +196,14 @@ var center = new Point(wide/2,high/2)
 for (z = 0; z < stacks; z++) {
     pz=z*prange;
     drawFrame(z); // Draw the initial frame
-    if(z==0){solid(z)}
+    //if(z==0){solid(z)}
 
          //-----Draw each layer
-        if(z<stacks-1 && z!=0 ){
+        if(z<stacks-1 && z!=-1 ){
             if (z==stacks-2){oset = minOffset}else{oset = ~~(minOffset*(stacks-z-1))}
-            somelines(z); 
+            horzLines(z,10,50);
+            portal (z)
+
 
         }
         
@@ -247,12 +259,14 @@ for (z = 0; z < stacks; z++) {
 
 //vvvvvvvvvvvvvvv PROJECT FUNCTIONS vvvvvvvvvvvvvvv 
  
-function somelines(z){
+function horzLines(z,ls,shake) {
+    var spacing = ~~((high)/(ls));
+    for (l=1;l<ls+1;l++){
         p = []
-        y = R.random_int(framewidth, high-framewidth);
-        p[0]=new Point(0,y)
-        y2 = R.random_int(framewidth, high-framewidth);
-        p[1]=new Point(wide,y2)
+        y = ~~(l*spacing+rangeInt(~~(shake/ratio),l,z+1));
+        p[0]=new Point(framewidth/2,y)
+        y2 = ~~(l*spacing+rangeInt(~~(shake/ratio),l+10,z+10))
+        p[1]=new Point(wide-framewidth/2,y2)
         lines = new Path.Line (p[0],p[1]); 
         mesh = PaperOffset.offsetStroke(lines, minOffset,{ cap: 'butt' });
         mesh.flatten(4);
@@ -260,11 +274,75 @@ function somelines(z){
         lines.remove();
         join(z,mesh); 
         mesh.remove();
-
-    
+    }
 }
 
 
+function vertLines(z,ls,shake) {
+    //z is the layer to render it to
+    //ls is the number of lines to draw
+    //shake is the variance of the start and end points
+    var spacing = ~~((wide)/(ls));
+    for (l=1;l<ls+1;l++){
+        p = []
+        x = ~~(l*spacing+rangeInt(~~(shake/ratio),l,z+1));
+        p[0]=new Point(x,framewidth/2)
+        x2 = ~~(l*spacing+rangeInt(~~(shake/ratio),l+10,z+10))
+        p[1]=new Point(x2,high-framewidth/2)
+        lines = new Path.Line (p[1],p[0]);
+        mesh = PaperOffset.offsetStroke(lines, minOffset,{ cap: 'butt' });
+        mesh.flatten(4);
+        mesh.smooth();
+        lines.remove();
+        join(z,mesh); 
+        mesh.remove();
+    }
+}
+
+function portal (z){
+    for (p=0;p<numberofcircles;p++){
+    pp=pp+prange;   
+        var ocircle = new Path.Circle(cc[p], cr[p]);
+        var icircle = new Path.Circle(cc[p], cr[p]-minOffset*3);
+        sheet[z] = sheet[z].subtract(icircle);
+        project.activeLayer.children[project.activeLayer.children.length-1].remove();
+        c = ocircle.subtract(icircle);
+        ocircle.remove();icircle.remove();
+        sheet[z] = c.unite(sheet[z]);
+        c.remove();  
+        project.activeLayer.children[project.activeLayer.children.length-2].remove();
+
+        if (z<stacks-2 ) {
+            for (r=0; r<360; r=r+8){
+                pr=pr+prange;
+            var spikewidth=~~(noise.get(p,r,pz)*(cr[p]/12)+20);
+            //console.log(spikewidth)
+            //if (noise.get(z)>.1 && noise.get(z)<.9 && isskewed=="Yes") {skewish = new Point(0, Math.floor(noise.get(pr,pp,z)*cr[p]/2) )}
+                //else {skewish = new Point(0, 0)}
+            //console.log(skewish)
+            /*if (noise.get(847)>.5)
+                {var spike = new Path(cc[p]+skewish, (cc[p] + new Point(cr[p]-5, - spikewidth/2)), (cc[p] + new Point(cr[p]-5, spikewidth)),cc[p]+skewish); spike.closed = true;}
+            else {var spike = new Path(cc[p]-skewish, (cc[p] + new Point(cr[p]-5, - spikewidth/2)), (cc[p] + new Point(cr[p]-5, spikewidth)),cc[p]-skewish); spike.closed = true;} */
+            var pt=[];
+            pt[1]= cc[p];
+            pt[2]= new Point(cc[p].x+cr[p], cc[p].y-spikewidth/2)
+            pt[3]= new Point(cc[p].x+cr[p], cc[p].y+spikewidth/2)
+            var spike = new Path(pt[1],pt[2],pt[3],pt[1]); spike.closed = true;
+            //var spike = new Path(cc[p], (cc[p] + new Point(cr[p]+5, - spikewidth/2)), (cc[p] + new Point(cr[p]+5, spikewidth)),cc[p]); spike.closed = true;
+
+            var offset = new Path.Circle(cc[p], ~~(noise.get(pr,pp,z)*cr[p]+(z*(minOffset*2))));
+            
+            spire = spike.subtract(offset);
+            spike.remove(); offset.remove();
+            spire.rotate(r+noise.get(r,p,pz)*10, cc[p]);
+            
+            sheet[z] = spire.unite(sheet[z]);  
+            spire.remove();
+            project.activeLayer.children[project.activeLayer.children.length-2].remove();
+            }
+        }
+    }
+}
 
 
 //^^^^^^^^^^^^^ END PROJECT FUNCTIONS ^^^^^^^^^^^^^ 
