@@ -102,7 +102,7 @@ var scale = 2;
 var ratio = 1/scale;//use 1/4 for 32x40 - 1/3 for 24x30 - 1/2 for 16x20 - 1/1 for 8x10
 
 var minOffset = ~~(7*ratio); //this is aproximatly .125"
-var framewidth = ~~(R.random_int(50, 50)*scale); 
+var framewidth = ~~(R.random_int(25, 25)*scale); 
 //var framewidth = 50; 
     if (qfw){framewidth=qfw};
 
@@ -146,7 +146,7 @@ console.log(orientation+': '+~~(wide/100/ratio)+' x '+~~(high/100/ratio))
 
 
 //setup the project variables
-numberofcircles=R.random_int(1,2);
+numberofcircles=R.random_int(1,6);
 var cc=[];var cr=[];p=0;
 for (i=0;i<=numberofcircles;i++){
 cc[i]=new Point(~~(noise.get(i*i)*wide),~~(noise.get(i+i)*high));
