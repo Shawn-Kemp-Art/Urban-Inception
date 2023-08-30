@@ -146,12 +146,14 @@ console.log(orientation+': '+~~(wide/100/ratio)+' x '+~~(high/100/ratio))
 
 
 //setup the project variables
-numberofcircles=R.random_int(1,12);
+numberofcircles=R.random_int(1,2);
 var cc=[];var cr=[];p=0;
 for (i=0;i<=numberofcircles;i++){
 cc[i]=new Point(~~(noise.get(i*i)*wide),~~(noise.get(i+i)*high));
 cr[i]=~~(wide/8+noise.get(i+50)*(wide/4));
 }
+var meshDensity = R.random_int(5, 15);
+var jiggle = R.random_int(25,100);
 
 if (noise.get(1567)>.6) {isskewed = "Yes"} else{isskewed = "No"};
 console.log("Skew: "+isskewed);
@@ -201,8 +203,10 @@ for (z = 0; z < stacks; z++) {
          //-----Draw each layer
         if(z<stacks-1 && z!=-1 ){
             if (z==stacks-2){oset = minOffset}else{oset = ~~(minOffset*(stacks-z-1))}
-            horzLines(z,10,50);
-            portal (z)
+            horzLines(z,meshDensity,jiggle);
+             vertLines(z,meshDensity,jiggle);
+         //hexGrid(z,meshDensity);
+            portals(z);
 
 
         }
@@ -299,7 +303,31 @@ function vertLines(z,ls,shake) {
     }
 }
 
-function portal (z){
+function hexGrid(z,across){
+    //z is the layer to render it to
+    //across is the number of hexs to draw across the width
+    radius = ~~(wide/((3/2*across)));
+    oset = ~~(radius/(stacks-1));
+    ystart = ~~(high%(Math.sqrt(3)*radius))/2
+    r=0;
+    for (y=ystart;y<high;y=y+~~(Math.sqrt(3)*radius)/2){
+        //if (r%2 == 0) {xstart=~~(3/2*radius)}else{xstart=~~(3/2*radius)*2}
+        if (r%2 == 0) {xstart=~~(3/2*radius)}else{xstart=~~(3/2*radius)*2}
+        for (x=xstart;x<wide;x=x+~~(3/2*radius)*2){
+            center = new Point(x, y);
+            sides = 6; 
+            hex=new Path.RegularPolygon(center, sides, radius);
+            hex.rotate(30)
+            mesh = PaperOffset.offsetStroke(hex, ~~(minOffset+oset*(stacks-z-2)),{ cap: 'butt' });
+            hex.remove();
+            join(z,mesh); 
+            mesh.remove();
+        }
+        r++
+    }
+}
+
+function portals(z){
     for (p=0;p<numberofcircles;p++){
     pp=pp+prange;   
         var ocircle = new Path.Circle(cc[p], cr[p]);
