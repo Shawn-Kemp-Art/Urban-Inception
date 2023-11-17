@@ -79,6 +79,7 @@ var qo = new URLSearchParams(window.location.search).get('orientation'); //chang
 var qm = new URLSearchParams(window.location.search).get('cutmarks'); //any value turns on cutmarks and hangers
 var qc = new URLSearchParams(window.location.search).get('colors'); // number of colors
 var qb = new URLSearchParams(window.location.search).get('pattern');// background style
+var sc = new URLSearchParams(window.location.search).get('special');// background style
 
 var testingGo = new URLSearchParams(window.location.search).get('testing');// Run generative tests
 
@@ -163,7 +164,8 @@ console.log("Inceptions: "+numberofcircles);
 
 
 //Pick layer colors from a random pallete based on tint library
-for (var c=0; c<numofcolors; c=c+1){palette[c] = tints[R.random_int(0, tints.length-1)];};    
+for (var c=0; c<numofcolors; c=c+1){palette[c] = tints[R.random_int(0, tints.length-1)];}; 
+if (sc){for (var c=0; c<numofcolors; c=c+1){palette[c] = tints2[R.random_int(0, tints2.length-1)];}; };   
 
 //randomly assign colors to layers
 for (var c=0; c<stacks; c=c+1){colors[c] = palette[R.random_int(0, palette.length)];};

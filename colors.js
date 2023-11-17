@@ -27,6 +27,17 @@ var tints = [
 {"Hex":"#949B6F", "Name":"Valley Green"},
 ]
 
+var tints2 = [
+{"Hex":"#745042", "Name":"Burnt Sienna"},
+{"Hex":"#FBCBD7", "Name":"Hollyhock"},
+{"Hex":"#63939D", "Name":"Ocean Blue"},
+{"Hex":"#F7743E", "Name":"Tangerine"},
+{"Hex":"#1A1A1A", "Name":"Smooth Black"},
+{"Hex":"#FFFFFF", "Name":"Smooth White"},
+
+]
+
+
 var lightburn = [
 {"Hex":"#0000ff", "Name":"1"},
 {"Hex":"#ff0000", "Name":"2"},
