@@ -552,6 +552,18 @@ document.addEventListener('keypress', (event) => {
             floatingframe();
             }    
 
+       //Format for plotting
+       if(event.key == "l") {
+            for (z=0;z<stacks;z++){
+                if (z<stacks-1){
+                    for (zs=z+1;zs<stacks;zs++){
+                        sheet[z] = sheet[z].subtract(sheet[zs]);
+                        sheet[z].previousSibling.remove();
+                    }
+                } 
+                console.log("optimizing")
+            }
+        }
 
        //Format for Lightburn
        if(event.key == "b") {
