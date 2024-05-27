@@ -606,7 +606,7 @@ document.addEventListener('keypress', (event) => {
   
 
             //layers
-       if(event.key == "l") {
+       if(event.key == "z") {
             var l = prompt("How many layers", stacks);
             setquery("layers",l);
             location.reload();
