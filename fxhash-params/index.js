@@ -99,7 +99,7 @@ definitions = [
     },
     {
         id: "density",
-        name: "Density",
+        name: "Spike density",
         type: "number",
         default: 25,
         options: {
@@ -110,12 +110,12 @@ definitions = [
     },
     {
         id: "radius",
-        name: "Radiuses",
+        name: "Spike radius",
         type: "number",
         default: 2,
         options: {
             min: 0,
-            max: 10,
+            max: 5,
             step: .25,
         },  
     },
