@@ -176,6 +176,10 @@ console.log(palette);
 
 //randomly assign colors to layers
 for (c=0; c<stacks; c=c+1){colors[c] = palette[R.random_int(0, palette.length-1)];};
+
+//or alternate colors
+p=0;for (var c=0; c<stacks; c=c+1){colors[c] = palette[p];p=p+1;if(p==palette.length){p=0};}
+
 console.log(colors);
 //p=0;for (var c=0; c<stacks; c=c+1){colors[c] = palette[p];p=p+1;if(p==palette.length){p=0};}
 
@@ -300,7 +304,7 @@ for (z = 0; z < stacks; z++) {
     $fx.features(features);
     //$fx.preview();
  
-    //floatingframe();
+    floatingframe();
      //upspirestudio(features); //#render and send features to upspire.studio
 
 
@@ -439,6 +443,7 @@ function portals(z){
 //--------- Helper functions ----------------------- 
 
 function floatingframe(){
+    console.log("frame")
     var frameWide=~~(34*ratio);var frameReveal = ~~(12*ratio);
   if (framegap.isEmpty()){
         var outsideframe = new Path.Rectangle(new Point(0, 0),new Size(~~(wide+frameReveal*2), ~~(high+frameReveal*2)), framradius)
